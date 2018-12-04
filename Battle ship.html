@@ -1,0 +1,596 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+
+<script>
+
+var ship=0,check1=0,Stop=0;	
+var sea= new Array(100);
+var sea2= new Array(100);
+var shipnumber=0;
+var shipset=new Array();
+var shipnum=0;var cheat=false;
+for (var a=0;a<100;a++){
+	sea[a]=0;
+	sea2[a]=0;
+	
+}
+$(document).ready(function(){
+	$("#Cheatmode").click(function(){
+		cheat=true;
+	});
+	 $("#start").click(function(){
+	  $("#start1").fadeOut();
+	  	for (var a=0;a<10;a++){
+			var c= document.createElement('tr');
+			document.getElementById('sea').appendChild(c);
+			for (var b=0;b<10;b++){
+				var d= document.createElement('td');
+				var dd= document.createElement('button');
+				dd.setAttribute('class', "btn");
+				dd.setAttribute('id', a*10+b);
+				dd.textContent	= 0;
+				d.appendChild(dd);
+				document.getElementById('sea').appendChild(d);
+		}
+		for (var b=0;b<10;b++){
+	  		var space=document.createElement('td');
+			space.textContent='/';
+			document.getElementById('sea').appendChild(space);
+		}
+			
+		for (var b=0;b<10;b++){
+			var d= document.createElement('td');
+			var dd= document.createElement('button');
+			dd.setAttribute('id', 100+(a*10+b));
+			dd.setAttribute('class', "atn");
+			dd.textContent	= '?';
+			d.appendChild(dd);
+			document.getElementById('sea').appendChild(d);
+		}
+		}
+		click2();
+		click3();
+});
+});
+  
+		
+
+function  click2(){
+
+$("#station").text("The first ship");  
+var Click=document.createElement('button');
+	Click.textContent='Next';
+	Click.setAttribute('id','next');
+	$("#station2").append(Click); 
+	  	$("#next").live("click",function(){
+		if(ship!=2){
+			alert('not complete1')
+		}else{
+				for (var b=0;b<100;b++){
+					if($("#"+b).text()==1){
+					sea[b]=1;
+					shipset[shipnum]=b;
+					shipnum++;
+					}}
+				for (var b=0;b<100;b++){
+					if($("#"+b).text()==1){
+					$("#"+b).text('S');
+					}}	
+					shipnumber++;
+					ship=0;
+					
+			if(shipnumber==1){
+				$("#station").text("The second ship");
+			}
+			if(shipnumber==2){
+				$("#station").text("The thrid ship");
+			}
+			if(shipnumber==3){
+				$("#station").text("The fourth ship");
+			}
+			if(shipnumber==4){
+				$("#station").text("Attack time");
+				$("#next").remove();
+				Stop=1;
+				AI();
+				attack();
+				
+			}
+			}
+});   
+
+}
+function  click3(){
+
+  $(".btn").live("click",function(){
+	 if(Stop==0){
+    var abc=$(this).attr('id');
+	if(sea[abc]==1){
+		alert('error for Location of existence')
+	}else{
+	if(ship==0){
+		$("#"+abc).text(1);
+		ship++;
+		check1=Number(abc);
+	}else if(ship==1){
+			if(abc==check1){
+			$("#"+abc).text(0);
+			ship--;
+			check1=0;
+				}else if(Number(abc)==(check1+10)){
+					if((Number(abc)/10)>8){
+						alert('error for no space1')
+					}else if(sea[Number(abc)+10]==1||sea[Number(abc)+20]==1){
+						alert('error for Location of existence');
+					}else{
+					$("#"+abc).text(1);
+					$("#"+(Number(abc)+10)).text(1);	
+					$("#"+(Number(abc)+20)).text(1);
+					ship++
+					}}else if(Number(abc)==(check1+1)){
+					if(Number(abc)%10>8){
+						alert('error for no space')
+					}else if(sea[Number(abc)+1]==1||sea[Number(abc)+2]==1){
+						alert('error for Location of existence');
+					}else{
+					$("#"+abc).text(1);
+					$("#"+(Number(abc)+1)).text(1);	
+					$("#"+(Number(abc)+2)).text(1);
+					ship++
+				}}else if(Number(abc)==(check1-10)){
+					if((Number(abc)/10)<2){
+						alert('error for no space')
+					}else if(sea[Number(abc)-10]==1||sea[Number(abc)-20]==1){
+						alert('error for Location of existence');
+					}else{
+					$("#"+abc).text(1);
+					$("#"+(Number(abc)-10)).text(1);	
+					$("#"+(Number(abc)-20)).text(1);
+					ship++
+				}}else if(Number(abc)==(check1-1)){
+					if(Number(abc)%10<2){
+						alert('error for no space')
+					}else if(sea[Number(abc)-1]==1||sea[Number(abc)-2]==1){
+						alert('error for Location of existence');
+					}else{
+					$("#"+abc).text(1);
+					$("#"+(Number(abc)-1)).text(1);	
+					$("#"+(Number(abc)-2)).text(1);
+					ship++
+				}}else{
+					alert('error')
+		}}else if(ship==2){
+			if($("#"+abc).text()==1){
+				for (var b=0;b<100;b++){
+					if(sea[b]==1){
+					}else{
+					$("#"+ b).text(0);
+					}
+				}
+				ship=0;
+				
+				}else{
+					
+			}
+}
+}
+}else{
+	
+}
+
+  });
+}
+
+
+
+
+var shipset2=new Array();
+var shipnum2=0;
+
+function AI(){
+var AIshipnumber=0;
+while(AIshipnumber<4){
+ 	var number=Math.floor(Math.random()*100);
+	var number2=Math.floor(Math.random()*4);
+	var number3=number+100;
+ if(sea2[number]!=1){
+switch (number2){
+ case 0:
+ if(sea2[number+10]!=1&&sea2[number+20]!=1&&sea2[number+30]!=1&&((number)/10)<7){
+	sea2[number]=1;
+		shipset2[shipnum2]=number;shipnum2++;
+	sea2[number+10]=1;
+		shipset2[shipnum2]=number+10;shipnum2++;
+	sea2[number+20]=1;
+		shipset2[shipnum2]=number+20;shipnum2++;
+	sea2[number+30]=1;
+		shipset2[shipnum2]=number+30;shipnum2++;
+if(cheat==true){
+	 $("#"+number3).text(1);$("#"+(Number(number3)+10)).text(1);$("#"+(Number(number3)+20)).text(1);$("#"+(Number(number3)+30)).text(1);
+}
+	 AIshipnumber++;
+	
+	break;
+ }
+ case 1:
+ if(sea2[number-10]!=1&&sea2[number-20]!=1&&sea2[number-30]!=1&&((number)/10)>3){
+	sea2[number]=1;
+ 		shipset2[shipnum2]=number;shipnum2++;
+	sea2[number-10]=1;
+		shipset2[shipnum2]=number-10;shipnum2++;
+	sea2[number-20]=1;
+		shipset2[shipnum2]=number-20;shipnum2++;
+	sea2[number-30]=1;
+		shipset2[shipnum2]=number-30;shipnum2++;
+		if(cheat==true){
+	$("#"+number3).text(1);$("#"+(Number(number3)-10)).text(1);$("#"+(Number(number3)-20)).text(1);$("#"+(Number(number3)-30)).text(1);
+		}
+	AIshipnumber++;
+	break;
+ }
+ case 3:
+ if(sea2[number+1]!=1&&sea2[number+2]!=1&&sea2[number+3]!=1&&((number)%10)<7){
+	sea2[number]=1;
+ 		shipset2[shipnum2]=number;shipnum2++;
+	sea2[number+1]=1;
+		shipset2[shipnum2]=number+1;shipnum2++;
+	sea2[number+2]=1;
+		shipset2[shipnum2]=number+2;shipnum2++;
+	sea2[number+3]=1;
+		shipset2[shipnum2]=number+3;shipnum2++;
+		if(cheat==true){
+	$("#"+number3).text(1);$("#"+(Number(number3)+1)).text(1);$("#"+(Number(number3)+2)).text(1);$("#"+(Number(number3)+3)).text(1);
+		}AIshipnumber++;
+	break;
+ }
+ case 4:
+ if(sea2[number-1]!=1&&sea2[number-2]!=1&&sea2[number-3]!=1&&((number)%10)>3){
+	sea2[number]=1;
+ 		shipset2[shipnum2]=number;shipnum2++;
+	sea2[number-1]=1;
+		shipset2[shipnum2]=number-1;shipnum2++;
+	sea2[number-2]=1;
+		shipset2[shipnum2]=number-2;shipnum2++;
+	sea2[number-3]=1;
+		shipset2[shipnum2]=number-3;shipnum2++;
+		if(cheat==true){
+	$("#"+number3).text(1);$("#"+(Number(number3)-1)).text(1);$("#"+(Number(number3)-2)).text(1);$("#"+(Number(number3)-3)).text(1);
+		}AIshipnumber++;
+	break;
+ }
+ case 5:
+ continue;
+ 
+}
+ }else{
+	continue;
+ }
+
+}
+
+}
+var shipnumber2=4;
+	var attacknumber2=0;
+	var destroy1a=false;var destroy2a=false;var destroy3a=false;var destroy4a=false;
+function AIattack(){
+	
+	var number1,number2,number3,number4;
+	var hit= new Array(4);
+	for(var d=0;d<4;d++){hit[d]=500;}
+	var hitlist= new Array();var hitlistnum=0;
+	var hited= new Array();var hitednum=0;
+	var repeat=0;var repeat2=0;var repeat3=0;var repeat4=0;
+		
+		
+	if(hitlist.length==0){
+		while(true){
+		number1=Math.floor(Math.random()*100);
+		if($("#"+number1).text()!='H'&&$("#"+number1).text()!='N'){
+			break;
+		}}
+		if(shipnumber2>=2){
+		while(true){
+		number2=Math.floor(Math.random()*100);
+		if(number2!=number1&&$("#"+number2).text()!='H'&&$("#"+number2).text()!='N'){
+		break;}}
+		}
+		if(shipnumber2>=3){
+		while(true){
+		number3=Math.floor(Math.random()*100);
+		if(number3!=number1&&number3!=number2&&$("#"+number3).text()!='H'&&$("#"+number3).text()!='N'){
+		break;}}
+		}
+		if(shipnumber2>=4){
+		while(true){
+		number4=Math.floor(Math.random()*100);
+		if(number4!=number1&&number4!=number2&&number4!=number3&&$("#"+number4).text()!='H'&&$("#"+number4).text()!='N'){
+		break;}}
+		}}
+	
+		
+		
+		if(sea[number1]==1){
+		sea[number1]=2;
+		$("#"+number1).text('H');
+		hit[0]=number1;
+		hited[hitednum]=number1;
+		hitednum++;
+		}else{
+		$("#"+number1).text('N');
+		}
+		
+		if ((100-hitednum)>=2){
+		if(sea[number2]==1){
+		sea[number2]=2;
+		$("#"+number2).text('H');
+		hit[1]=number2;
+		hited[hitednum]=number2;
+		hitednum++;
+		}else{
+		$("#"+number2).text('N');
+		}}
+		
+		if ((100-hitednum)>=3){
+		if(sea[number3]==1){
+		sea[number3]=2;
+		$("#"+number3).text('H');
+		hit[2]=number3;
+		hited[hitednum]=number3;
+		hitednum++;
+		}else{
+		$("#"+number3).text('N');
+		}}
+		
+		if ((100-hitednum)>=4){
+		if(sea[number4]==1){
+		sea[number4]=2;
+		$("#"+number4).text('H');
+		hit[3]=number4;
+		hited[hitednum]=number4;
+		hitednum++;
+		}else{
+		$("#"+number4).text('N');
+		}}
+		
+		hitlistnum=hitlist.length;
+		for(var d=0;d<4;d++){
+			if(hit[d]!=500){
+			for(var c=0;c<hitlistnum;c++){
+				if(hitlist[c]==hit[d]+10){
+					repeat=1;
+					}
+				if(hitlist[c]==hit[d]-10){
+					repeat2=1;
+					}
+				if(hitlist[c]==hit[d]+1){
+					repeat3=1;
+					}
+				if(hitlist[c]==hit[d]-1){
+					repeat4=1;
+					}
+			}
+			if(repeat==0){
+			hitlist[hitlistnum]=hit[d]+10;
+			hitlistnum++;
+			}
+			if(repeat2==0){
+			hitlist[hitlistnum]=hit[d]-10;
+			hitlistnum++;
+			}
+			if(repeat3==0){
+			hitlist[hitlistnum]=hit[d]+1;
+			hitlistnum++;
+			}
+			if(repeat4==0){
+			hitlist[hitlistnum]=hit[d]-1;
+			hitlistnum++;
+			}
+			
+			repeat=0;repeat2=0;repeat3=0;repeat4=0;
+			for(var d=0;d<4;d++){hit[d]=500;}
+		}
+		}
+		for(var c=0;c<hitednum;c++){
+			for(var d=0;d<16;d++){	
+				if(hited[c]==shipset[d]){
+					shipset[d]=1000;
+	
+							}}}
+							
+							if(destroy1a==false){
+								var ship001 =shipset[0]+shipset[1]+shipset[2]+shipset[3];
+							}
+							if(destroy2a==false){
+								var ship002 =shipset[4]+shipset[5]+shipset[6]+shipset[7];
+							}
+							if(destroy3a==false){
+								var ship003 =shipset[8]+shipset[9]+shipset[10]+shipset[11];
+							}
+							if(destroy4a==false){
+								var ship004 =shipset[12]+shipset[13]+shipset[14]+shipset[15];
+							}
+								if(ship001==4000){
+									alert("Your ship1 is destroyed!");
+									destroy1a=true;
+									shipnumber1--;
+									ship001=5000;
+								}
+								if(ship002==4000){
+									alert("Your ship2 is destroyed!");
+									destroy2a=true;
+									shipnumber1--;
+									ship002=5000;
+								}
+								if(ship003==4000){
+									alert("Your ship3 is destroyed!");
+									destroy3a=true;
+									shipnumber1--;
+									ship003=5000;
+								}
+								if(ship004==4000){
+									alert("Your ship4 is destroyed!");
+									destroy4a=true;
+									shipnumber1--;
+									ship004=5000;
+								}
+								if(destroy4a==true&&destroy3a==true&&destroy2a==true&&destroy1a==true){
+									alert("Gameover");
+									$("#attack").remove();
+									stop1=1;	
+							
+								}
+
+			
+	
+}
+var shipnumber1=4;
+	var attacknumber=0;
+	var stop1=0;
+function attack(){
+	stop1=0;
+	var destroy1=false;var destroy2=false;var destroy3=false;var destroy4=false;
+	var shipattacted= new Array();var shipattactednum=0;
+	var save;
+	$(".atn").live("click",function(){
+		if(stop1==0){
+    var abc=$(this).attr('id');
+	if($("#"+abc).text()=="A"){
+		$("#"+abc).text(function(){return save.toString();});
+		attacknumber--;
+	}else{
+	if(attacknumber<shipnumber1){
+	if($("#"+abc).text()!="H"&&$("#"+abc).text()!="N"){
+			save=$("#"+abc).text();
+		$("#"+abc).text("A");
+		attacknumber++;		
+	}else{
+		alert("space was attacked");
+	}
+	}else{
+		alert('Attacknumber full!');
+	}
+	}}
+	});
+	var Click=document.createElement('button');
+	Click.textContent='Attack';
+	Click.setAttribute('id','attack');
+	$("#Text").append(Click); 
+	$("#attack").live("click",function(){
+		if(attacknumber<shipnumber1){
+			alert("You still can attack "+(shipnumber1-attacknumber)+" times");
+		}else{
+				AIattack();
+				for (var b=100;b<200;b++){
+					if($("#"+b).text()=='A'){
+						if(sea2[(b-100)]==1){
+							sea2[(b-100)]=2;
+							$("#"+b).text('H');
+							shipattacted[shipattactednum]=(b-100);
+							shipattactednum++;
+							}else{
+							$("#"+b).text('N');
+						}}}
+
+							for(var c=0;c<=shipattactednum;c++){
+								for(var d=0;d<16;d++){	
+									if(shipattacted[c]==shipset2[d]){
+										shipset2[d]=1000;
+	
+							}}}
+							
+							if(destroy1==false){
+								var ship01 =shipset2[0]+shipset2[1]+shipset2[2]+shipset2[3];
+							}
+							if(destroy2==false){
+								var ship02 =shipset2[4]+shipset2[5]+shipset2[6]+shipset2[7];
+							}
+							if(destroy3==false){
+								var ship03 =shipset2[8]+shipset2[9]+shipset2[10]+shipset2[11];
+							}
+							if(destroy4==false){
+								var ship04 =shipset2[12]+shipset2[13]+shipset2[14]+shipset2[15];
+							}
+								if(ship01==4000){
+									alert("ship1 destroy!");
+									destroy1=true;
+									shipnumber2--;
+									ship01=5000;
+								}
+								if(ship02==4000){
+									alert("ship2 destroy!");
+									destroy2=true;
+									shipnumber2--;
+									ship02=5000;
+								}
+								if(ship03==4000){
+									alert("ship3 destroy!");
+									destroy3=true;
+									shipnumber2--;
+									ship03=5000;
+								}
+								if(ship04==4000){
+									alert("ship4 destroy!");
+									destroy4=true;
+									shipnumber2--;
+									ship04=5000;
+								}
+								if(destroy4==true&&destroy3==true&&destroy2==true&&destroy1==true){
+									alert("You Are Winner");
+									
+									$("#attack").remove();
+									stop1=1;
+										
+							
+								}
+							
+	attacknumber=0;
+
+}})
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+<title>无标题文档</title>
+</head>
+
+<body>
+<div id ='start1'>
+<P>Wellcome to the battle ship</P>
+<button type="button" id = 'start'>Click to Start</button>
+<button type="button" id = 'Cheatmode'>Cheat mode</button>
+</div>
+
+<table id = 'sea'>
+</table>
+<P id ="station"></P><div id ="station2"></div>
+<div id ="Text"></div>
+
+
+
+</body>
+
+
+</html>
